@@ -1,0 +1,11 @@
+CREATE DATABASE SitechDB;
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'SITECHdatabase_@2021';
+GRANT ALL PRIVILEGES ON SitechDB.* TO root@localhost;
+CREATE USER 'sitech'@'%' IDENTIFIED WITH mysql_native_password BY 'SITECHdatabase_@2021';
+GRANT ALL PRIVILEGES ON SitechDB.* TO 'sitech'@'%';
+FLUSH PRIVILEGES;
+SET GLOBAL log_bin_trust_function_creators = 1;
+SET GLOBAL event_scheduler = OFF;
+SET @@GLOBAL.event_scheduler = OFF;
+SET GLOBAL event_scheduler = 0;
+SET @@GLOBAL.event_scheduler = 0;
