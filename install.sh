@@ -28,7 +28,6 @@ loader() {
 if check_connection; then
 	# variavel de controle anti-falha de execucao
 	correct_passwrd=false
-
 	# verificacao de senha
 	while ! $correct_passwrd; do
 	    passwrd="$(zenity --password --title "CHECK PASSWORD" --text "Confirme a senha da máquina.")"
@@ -42,6 +41,12 @@ if check_connection; then
 		exit
 	    fi
 	done
+	# configura o ambiente
+	gsettings set org.gnome.desktop.session idle-delay 0
+	gsettings set org.gnome.desktop.screensaver lock-enabled false
+	gsettings set org.gnome.desktop.screensaver ubuntu-lock-on-suspend false
+	gsettings set org.gnome.desktop.notifications show-banners false
+	gsettings set org.gnome.shell favorite-apps "[]"
 	# atualiza o sistema
 	echo "$passwrd" | sudo -S apt-get update -y && sudo apt update && sudo apt upgrade -y && sudo apt-get update && sudo apt-get upgrade -y && sudo snap refresh && sudo apt-get dist-upgrade && sudo apt autoremove -y
 	# instala e configura timezone
@@ -61,6 +66,8 @@ if check_connection; then
 	sudo systemctl enable ssh
 	sudo systemctl start ssh
 	cd /home/$USER/xubuntu-heads-main/
+	gsettings set org.gnome.desktop.background picture-uri "file:///home/$USER/xubuntu-heads-main/bg.png"
+	gsettings set org.gnome.desktop.screensaver picture-uri "file:///home/$USER/xubuntu-heads-main/bg.png"
 	echo "$psswrd" | sudo -S chmod +x ./resources.sql
 	sudo dpkg -i ./mysql-workbench-community_8.0.27-1ubuntu20.04_amd64.deb
 	sudo apt-get install -y ./mysql-workbench-community_8.0.27-1ubuntu20.04_amd64.deb

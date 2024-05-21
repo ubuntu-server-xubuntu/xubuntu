@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=xubuntu
+Exec=/home/$USER/xubuntu-heads-main/install.sh
+Terminal=false
