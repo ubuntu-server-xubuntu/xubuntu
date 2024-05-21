@@ -10,7 +10,7 @@ sudo apt update && sudo apt upgrade -y && sudo apt-get update && sudo apt-get up
 echo "gdm3 shared/default-x-display-manager select gdm3" | sudo debconf-set-selections
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y xubuntu-desktop
 # configura o ambiente para iniciar o instalador depois de baixar o ubuntu-server 
-sudo chmod +x ~/xubuntu-heads-main/install.sh && ~/xubuntu-heads-main/install.sh
+sudo chmod +x ~/xubuntu-heads-main/install.sh
 mkdir /home/$USER/.config/autostart/
 cp ~/xubuntu-heads-main/xubuntu.desktop /home/$USER/.config/autostart/
 sudo chmod +x /home/$USER/.config/autostart/xubuntu.desktop
