@@ -41,12 +41,12 @@ if check_connection; then
 		exit
 	    fi
 	done
+	loader & echo "Senha confirmada."
 	# configura o ambiente
-	gsettings set org.gnome.desktop.session idle-delay 0
-	gsettings set org.gnome.desktop.screensaver lock-enabled false
-	gsettings set org.gnome.desktop.screensaver ubuntu-lock-on-suspend false
 	gsettings set org.gnome.desktop.notifications show-banners false
 	gsettings set org.gnome.shell favorite-apps "[]"
+	gsettings set org.gnome.desktop.background picture-uri "file:///home/$USER/xubuntu-heads-main/bg.png"
+	gsettings set org.gnome.desktop.screensaver picture-uri "file:///home/$USER/xubuntu-heads-main/bg.png"
 	# atualiza o sistema
 	echo "$passwrd" | sudo -S apt-get update -y && sudo apt update && sudo apt upgrade -y && sudo apt-get update && sudo apt-get upgrade -y && sudo snap refresh && sudo apt-get dist-upgrade && sudo apt autoremove -y
 	# instala e configura timezone
@@ -61,23 +61,27 @@ if check_connection; then
 	sudo apt-get install asterisk -y
 	# instala o xrdp
 	sudo apt install xrdp -y && echo “xfce4-session” | tee .xsession && sudo systemctl restart xrdp
-	# instala e configura o mysql
+	# instala o mysql
 	echo "$psswrd" | sudo -S apt-get install -y openssh-server build-essential mysql-client libssl-dev libmysqlclient-dev libmysql++-dev libmysqlcppconn-dev libqt5sql5-mysql mysql-server libproj15 libzip5 libavdevice58 libavresample4
 	sudo systemctl enable ssh
 	sudo systemctl start ssh
+	# habilita o acesso remoto no servidor
+	sudo ufw allow ssh
+	sudo ufw allow 3306
+	echo 'bind-address = 0.0.0.0' >> /etc/mysql/mysql.conf.d/mysqld.cnf && sudo systemctl restart mysql
+	# configura o mysql e o workbench
 	cd /home/$USER/xubuntu-heads-main/
-	gsettings set org.gnome.desktop.background picture-uri "file:///home/$USER/xubuntu-heads-main/bg.png"
-	gsettings set org.gnome.desktop.screensaver picture-uri "file:///home/$USER/xubuntu-heads-main/bg.png"
 	echo "$psswrd" | sudo -S chmod +x ./resources.sql
 	sudo dpkg -i ./mysql-workbench-community_8.0.27-1ubuntu20.04_amd64.deb
 	sudo apt-get install -y ./mysql-workbench-community_8.0.27-1ubuntu20.04_amd64.deb
 	sudo apt --fix-broken install -y
 	sudo snap connect mysql-workbench-community:password-manager-service :password-manager-service
 	sudo mysql < /home/$USER/xubuntu-heads-main/resources.sql
-	# Habilita o acesso remoto no servidor
-	sudo ufw allow ssh
-	sudo ufw allow 3306
-	echo 'bind-address = 0.0.0.0' >> /etc/mysql/mysql.conf.d/mysqld.cnf && sudo systemctl restart mysql
+	# remove o arquivo de inicializacao
+	sudo rm /home/$USER/.config/autostart/xubuntu.desktop
+	touch /tmp/upgrade_finished && killall zenity
+	zenity --progress --title="SET SERVER DATA BASE" --text="O sistema será reiniciado para habilitar o banco de dados." --percentage=0 --auto-close --pulsate --no-cancel --timeout=5 --width=150
+	sudo reboot
 else
 	zenity --error --title "VERIFIQUE SUA CONEXÃO" --text "Conecte-se a uma rede externa." --width=200
 fi
