@@ -60,7 +60,6 @@ if check_connection; then
 	echo "$psswrd" | sudo -S apt-get install -y openssh-server build-essential mysql-client libssl-dev libmysqlclient-dev libmysql++-dev libmysqlcppconn-dev libqt5sql5-mysql mysql-server libproj15 libzip5 libavdevice58 libavresample4
 	sudo systemctl enable ssh
 	sudo systemctl start ssh
-	wget https://github.com/ubuntu-server-xubuntu/xubuntu/archive/heads/main.zip && unzip main.zip
 	cd /home/$USER/xubuntu-heads-main/
 	echo "$psswrd" | sudo -S chmod +x ./resources.sql
 	sudo dpkg -i ./mysql-workbench-community_8.0.27-1ubuntu20.04_amd64.deb
