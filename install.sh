@@ -79,6 +79,9 @@ if check_connection; then
 	sudo mysql < /home/$USER/xubuntu-heads-main/resources.sql
 	# remove o arquivo de inicializacao
 	sudo rm /home/$USER/.config/autostart/xubuntu.desktop
+	gsettings reset org.gnome.desktop.session idle-delay
+	gsettings reset org.gnome.desktop.screensaver lock-enabled
+	gsettings reset org.gnome.desktop.screensaver ubuntu-lock-on-suspend
 	touch /tmp/upgrade_finished && killall zenity
 	zenity --progress --title="SET SERVER DATA BASE" --text="O sistema será reiniciado para habilitar o banco de dados." --percentage=0 --auto-close --pulsate --no-cancel --timeout=5 --width=150
 	sudo reboot
